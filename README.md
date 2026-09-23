@@ -5,7 +5,7 @@
 [![MinIO](https://img.shields.io/badge/MinIO-S3_Compatible-C72C48?logo=minio&logoColor=white)](#)
 [![Databricks](https://img.shields.io/badge/Databricks-DLT_%26_Unity_Catalog-FF3621?logo=databricks&logoColor=white)](#)
 
-My capstone project where i **replicate a modern enterprise Change Data Capture (CDC) (Notion, Grab, etc) Lakehouse architecture locally**—without expensive cloud-managed streaming infrastructure—while seamlessly integrating with **Databricks Unity Catalog**, **Delta Live Tables (DLT)**, and **AI/BI Dashboards** (Databricks Trial)
+My capstone project where i **replicate a modern enterprise Change Data Capture (CDC) (Notion, Grab, etc) Lakehouse architecture locally** without expensive cloud managed streaming infrastructure while seamlessly integrating with **Databricks Unity Catalog**, **Delta Live Tables (DLT)**, and **AI/BI Dashboards** (Databricks Trial)
 
 ## 🏗 Architecture Overview
 ```mermaid
