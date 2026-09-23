@@ -31,10 +31,14 @@ flowchart TD
     subgraph CLOUD ["Databricks Lakehouse (DLT)"]
         direction TB
         UC_VOL[("Databricks Unity Catalog\nVolume: /Volumes/.../cdc_raw/")]
-        
-        subgraph MEDALLION ["Medallion Pipeline"]
-            BRONZE[("🥉 Bronze Layer\nread_files() Auto Loader")]
-            STG["Staging Layer\nEnvelope Flattening"]
-            SILVER[("🥈 Silver Layer\nSCD Type 2 (APPLY CHANGES INTO)")]
-            GOLD[("🥇 Gold Layer\nCurated Business Marts")]
-        end
+        BRONZE[("🥉 Bronze Layer\nread_files() Auto Loader")]
+        SILVER[("🥈 Silver Layer\nSCD Type 2 (APPLY CHANGES INTO)")]
+        GOLD[("🥇 Gold Layer\ngold_customer_ltv KPI Aggregation")]
+        DASH["📊 Databricks AI/BI Dashboard\n(Lakeview Visualization)"]
+        UL --> UC_VOL
+        UC_VOL --> BRONZE
+        BRONZE --> SILVER
+        SILVER --> GOLD
+        GOLD --> DASH
+    end
+
