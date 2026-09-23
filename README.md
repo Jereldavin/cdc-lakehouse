@@ -12,33 +12,40 @@ My capstone project where i **replicate a modern enterprise Change Data Capture 
 flowchart TD
     subgraph LOCAL ["Local Infrastructure (Docker Compose)"]
         direction TB
-        PG[("PostgreSQL 14\n(WAL Logical Replication)")]
-        DBZ["Debezium Connector\n(Kafka Connect :8083)"]
-        KAFKA{{"Apache Kafka\n(:9092)"}}
-        BRIDGE["Python Bridge\n(bridge_minio.py)"]
-        MINIO[("MinIO S3 Storage\n(Bucket: cdc-raw)")]
-        PG -->|Write-Ahead Log (pgoutput)| DBZ
+        PG[("PostgreSQL 14<br>(WAL Logical Replication)")]
+        DBZ["Debezium Connector<br>(Kafka Connect :8083)"]
+        KAFKA{{"Apache Kafka<br>(:9092)"}}
+        BRIDGE["Python Bridge<br>(bridge_minio.py)"]
+        MINIO[("MinIO S3 Storage<br>(Bucket: cdc-raw)")]
+        
+        PG -->|Write-Ahead Log pgoutput| DBZ
         DBZ -->|Topics: dbserver1.inventory.*| KAFKA
         KAFKA -->|Consume Batches of 50| BRIDGE
         BRIDGE -->|Put JSONL Files| MINIO
     end
+    
     subgraph TRANSFER ["Manual Landing Bridge"]
-        DL["1. Download .jsonl files\nfrom MinIO Console (:9001)"]
-        UL["2. Upload .jsonl files\nto Databricks Volume UI"]
-        MINIO --> DL
+        direction TB
+        DL["1. Download .jsonl files<br>from MinIO Console (:9001)"]
+        UL["2. Upload .jsonl files<br>to Databricks Volume UI"]
+        
         DL --> UL
     end
+    
     subgraph CLOUD ["Databricks Lakehouse (DLT)"]
         direction TB
-        UC_VOL[("Databricks Unity Catalog\nVolume: /Volumes/.../cdc_raw/")]
-        BRONZE[("🥉 Bronze Layer\nread_files() Auto Loader")]
-        SILVER[("🥈 Silver Layer\nSCD Type 2 (APPLY CHANGES INTO)")]
-        GOLD[("🥇 Gold Layer\ngold_customer_ltv KPI Aggregation")]
-        DASH["📊 Databricks AI/BI Dashboard\n(Lakeview Visualization)"]
-        UL --> UC_VOL
+        UC_VOL[("Databricks Unity Catalog<br>Volume: /Volumes/.../cdc_raw/")]
+        BRONZE[("🥉 Bronze Layer<br>read_files() Auto Loader")]
+        SILVER[("🥈 Silver Layer<br>SCD Type 2 (APPLY CHANGES INTO)")]
+        GOLD[("🥇 Gold Layer<br>gold_customer_ltv KPI Aggregation")]
+        DASH["📊 Databricks AI/BI Dashboard<br>(Lakeview Visualization)"]
+        
         UC_VOL --> BRONZE
         BRONZE --> SILVER
         SILVER --> GOLD
         GOLD --> DASH
     end
 
+    %% Cross-subgraph connections must be defined outside the subgraphs
+    MINIO --> DL
+    UL --> UC_VOL
